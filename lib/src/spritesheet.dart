@@ -10,26 +10,26 @@ import 'package:vector_graphics_compiler/vector_graphics_compiler.dart'
 class Sprite {
   final String name;
   final int index;
-  final Map<int, Rect> rect;
+  final Rect rect;
   final VectorSprite vectorGraphics;
   const Sprite({
     required this.name,
     required this.vectorGraphics,
     required this.index,
-    this.rect = const {},
+    required this.rect,
   });
 }
 
 class Spritesheet {
   const Spritesheet({
     required this.sprites,
+    required this.spriteWidth,
     required this.width,
     required this.height,
     required this.pixelRatio,
-    required this.sizeVariants,
   });
-  final List<int> sizeVariants;
   final List<Sprite> sprites;
+  final int spriteWidth;
   final double pixelRatio;
   final int width;
   final int height;

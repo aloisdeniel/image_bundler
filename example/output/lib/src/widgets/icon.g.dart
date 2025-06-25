@@ -3,16 +3,16 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-abstract class Sprites {
-  static const cloudLightning = SpriteData(0, 'cloudLightning');
-  static const confetti = SpriteData(1, 'confetti');
-  static const dominos = SpriteData(2, 'dominos');
-  static const flowChart = SpriteData(3, 'flowChart');
-  static const flutter = SpriteData(4, 'flutter');
-  static const homeHeartFill = SpriteData(5, 'homeHeartFill');
-  static const magicFill = SpriteData(6, 'magicFill');
-  static const mailVolumeFill = SpriteData(7, 'mailVolumeFill');
-  static const rocket = SpriteData(8, 'rocket');
+abstract class Icons {
+  static const cloudLightning = IconData(0, 'cloudLightning');
+  static const confetti = IconData(1, 'confetti');
+  static const dominos = IconData(2, 'dominos');
+  static const flowChart = IconData(3, 'flowChart');
+  static const flutter = IconData(4, 'flutter');
+  static const homeHeartFill = IconData(5, 'homeHeartFill');
+  static const magicFill = IconData(6, 'magicFill');
+  static const mailVolumeFill = IconData(7, 'mailVolumeFill');
+  static const rocket = IconData(8, 'rocket');
   static const values = [
     cloudLightning,
     confetti,
@@ -26,264 +26,148 @@ abstract class Sprites {
   ];
 }
 
-class Icon extends StatelessWidget {
-  const Icon({super.key, required this.data, this.size = 24, this.color});
 
-  final double size;
-  final SpriteData data;
+class Icon extends StatelessWidget {
+  const Icon({super.key, required this.data, this.size, this.color, this.strategy = IconRenderingStrategy.auto,});
+
+  final double? size;
+  final IconData data;
   final Color? color;
+  final IconRenderingStrategy strategy;
 
   @override
   Widget build(BuildContext context) {
-    if (size > 48) {
-      return VectorGraphic(
-        loader: AssetBytesLoader('assets/icon/vec/${data.name}'),
-        height: size,
-        width: size,
-        fit: BoxFit.contain,
-        alignment: Alignment.center,
-        colorFilter:
-            (color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null),
-      );
-    }
-    Widget result = _Sprite(data: data, size: size);
-    if (color != null) {
-      result = ColorFiltered(
-        colorFilter: ColorFilter.mode(color!, BlendMode.srcIn),
-        child: result,
-      );
-    }
-    return result;
+    return SizedBox(
+      width: size,
+      height: size,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+        if (strategy == IconRenderingStrategy.vector || (strategy == IconRenderingStrategy.auto && constraints.maxWidth > 48)) {
+          return VectorGraphic(
+            loader: AssetBytesLoader('assets/icon/vec/${data.name}'),
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+            colorFilter:
+                (color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null),
+          );
+        }
+        Widget result = _Sprite(data: data);
+        if (color != null) {
+          result = ColorFiltered(
+            colorFilter: ColorFilter.mode(color!, BlendMode.srcIn),
+            child: result,
+          );
+        }
+        return result;
+      }),
+    );
   }
 }
 
-class SpriteData {
-  const SpriteData(this.id, this.name);
+enum IconRenderingStrategy {
+  auto,
+  vector,
+  raster,
+}
+
+class IconData {
+  const IconData(this.id, this.name);
   final int id;
   final String name;
   // This image is shared between all sprites.
-  static ImageProvider image = const AssetImage(
-    'output/lib/src/widgets/icon.g.dart',
-  );
-  Rect resolve(double size, double pixelRatio) {
+  static ImageProvider image24 = const AssetImage('assets/icon/sheet_24.png');
+  static ImageProvider image48 = const AssetImage('assets/icon/sheet_48.png');
+  (Rect,ImageProvider) resolve(double size, double pixelRatio) {
     var index = id * 2;
     double resolvedSize = 48.0;
+    var image = image48;
     switch (size) {
       case <= 24:
-        index += 0;
+        image = image24;
         resolvedSize = 24.0;
+        index += switch (pixelRatio) {
+          <= 1.0 => 0,
+          <= 2.0 => 36,
+          _ => 72,
+        };
       case <= 48:
-        index += 18;
+        image = image48;
         resolvedSize = 48.0;
+        index += switch (pixelRatio) {
+          <= 1.0 => 18,
+          <= 2.0 => 54,
+          _ => 90,
+        };
     }
-    switch (pixelRatio) {
-      case <= 1.0:
-        index += 0;
-        resolvedSize *= 1.0;
-      case <= 2.0:
-        index += 36;
-        resolvedSize *= 2.0;
-      case <= 3.0:
-        index += 72;
-        resolvedSize *= 3.0;
-    }
-    return Rect.fromLTWH(
+    return (Rect.fromLTWH(
       _pos[index].toDouble(),
       _pos[index + 1].toDouble(),
       resolvedSize,
       resolvedSize,
-    );
+    ), image);
   }
-
   /// All positions are stored consecutively in a list.
   static const _pos = [
-    176,
-    1,
-    343,
-    26,
-    126,
-    1,
-    245,
-    26,
-    76,
-    1,
-    147,
-    26,
-    26,
-    1,
-    49,
-    26,
-    101,
-    1,
-    196,
-    26,
-    51,
-    1,
-    98,
-    26,
-    151,
-    1,
-    294,
-    26,
-    1,
-    1,
-    0,
-    26,
-    201,
-    1,
-    392,
-    26,
-    344,
-    1,
-    679,
-    50,
-    246,
-    1,
-    485,
-    50,
-    148,
-    1,
-    291,
-    50,
-    50,
-    1,
-    97,
-    50,
-    197,
-    1,
-    388,
-    50,
-    99,
-    1,
-    194,
-    50,
-    295,
-    1,
-    582,
-    50,
-    1,
-    1,
-    0,
-    50,
-    393,
-    1,
-    776,
-    50,
-    512,
-    1,
-    1015,
-    74,
-    366,
-    1,
-    725,
-    74,
-    220,
-    1,
-    435,
-    74,
-    74,
-    1,
-    145,
-    74,
-    293,
-    1,
-    580,
-    74,
-    147,
-    1,
-    290,
-    74,
-    439,
-    1,
-    870,
-    74,
-    1,
-    1,
-    0,
-    74,
-    585,
-    1,
-    1160,
-    74,
+    1, 1, 26, 1, 51, 1, 76, 1, 101, 1, 126, 1, 151, 1, 176, 1, 201, 1, 1, 1, 50, 1, 99, 1, 148, 1, 197, 1, 246, 1, 295, 1, 344, 1, 393, 1, 1, 1, 50, 1, 99, 1, 148, 1, 197, 1, 246, 1, 295, 1, 344, 1, 393, 1, 1, 1, 98, 1, 195, 1, 292, 1, 389, 1, 486, 1, 583, 1, 680, 1, 777, 1, 1, 1, 74, 1, 147, 1, 220, 1, 293, 1, 366, 1, 439, 1, 512, 1, 585, 1, 1, 1, 146, 1, 291, 1, 436, 1, 581, 1, 726, 1, 871, 1, 1016, 1, 1161, 1,
   ];
 }
 
-class _Sprite extends LeafRenderObjectWidget {
-  const _Sprite({super.key, required this.data, this.size = 24});
 
-  final double size;
-  final SpriteData data;
+class _Sprite extends LeafRenderObjectWidget {
+  const _Sprite({
+    super.key,
+    required this.data,
+  });
+
+  final IconData data;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
     return _RenderSprite(
-      image: SpriteData.image,
-      source: data.resolve(size, pixelRatio),
-      sizeValue: size,
+      data: data,
     )..resolveImage(context);
   }
 
   @override
   // ignore: library_private_types_in_public_api
   void updateRenderObject(BuildContext context, _RenderSprite renderObject) {
-    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
     renderObject
-      ..imageProvider = SpriteData.image
-      ..source = data.resolve(size, pixelRatio)
-      ..sizeValue = size
+      ..data = data
       ..resolveImage(context);
   }
 }
 
 class _RenderSprite extends RenderBox {
   _RenderSprite({
-    required ImageProvider image,
-    required Rect source,
-    required double sizeValue,
-  }) : _source = source,
-       _imageProvider = image,
-       _sizeValue = sizeValue;
+    required IconData data,
+  })  : _data = data;
 
-  ImageProvider _imageProvider;
-  Rect _source;
-  double _sizeValue;
+  IconData _data;
 
-  set sizeValue(double value) {
-    if (_sizeValue == value) return;
-    _sizeValue = value;
-    markNeedsLayout();
-  }
-
-  set source(Rect value) {
-    if (_source == value) return;
-    _source = value;
-    markNeedsPaint();
-  }
-
-  set imageProvider(ImageProvider value) {
-    if (_imageProvider == value) return;
-    _imageProvider = value;
+  set data(IconData value) {
+    if (_data == value) return;
+    _data = value;
     markNeedsPaint();
   }
 
   ui.Image? _image;
   ImageStream? _imageStream;
   ImageStreamListener? _listener;
+  Rect _source = Rect.zero;
 
   void resolveImage(BuildContext context) {
-    final ImageStream newStream = _imageProvider.resolve(
-      createLocalImageConfiguration(context),
-    );
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final config = createLocalImageConfiguration(context);
+    final (source, provider) = _data.resolve(_sizeValue, pixelRatio);
+    _source = source;
+    final ImageStream newStream = provider.resolve(config);
 
     if (_imageStream?.key == newStream.key) return;
 
     _imageStream?.removeListener(_listener!);
 
-    _listener = ImageStreamListener((
-      ImageInfo imageInfo,
-      bool synchronousCall,
-    ) {
+    _listener =
+        ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
       _image = imageInfo.image;
       markNeedsPaint();
     });
@@ -300,7 +184,7 @@ class _RenderSprite extends RenderBox {
 
   @override
   void performLayout() {
-    size = constraints.constrain(Size.square(_sizeValue));
+    size = constraints.biggest;
   }
 
   @override
@@ -313,3 +197,4 @@ class _RenderSprite extends RenderBox {
     canvas.drawImageRect(_image!, _source, dst, Paint());
   }
 }
+

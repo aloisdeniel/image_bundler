@@ -7,8 +7,7 @@ void main(List<String> arguments) async {
     pixelRatios: [1.0, 2.0, 3.0],
     input: Directory('input'),
     name: 'icon',
-    assetOutput: Directory('output/assets/'),
-    codeOutput: Directory('output/lib/src/widgets/'),
+    output: Directory('output/'),
   );
 
   await for (var element in files) {

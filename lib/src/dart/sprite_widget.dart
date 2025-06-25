@@ -1,76 +1,55 @@
-String buildSpriteWidgetClass() {
-  return r'''
+import 'package:svg_bundler/src/dart/generator.dart';
+
+String buildSpriteWidgetClass(CompiledSpritesheet sheet) {
+  return '''
 class _Sprite extends LeafRenderObjectWidget {
   const _Sprite({
     super.key,
     required this.data,
-    this.size = 24,
   });
 
-  final double size;
-  final SpriteData data;
+  final ${sheet.options.dataClassName} data;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
     return _RenderSprite(
-      image: SpriteData.image,
-      source: data.resolve(size, pixelRatio),
-      sizeValue: size,
+      data: data,
     )..resolveImage(context);
   }
 
   @override
   // ignore: library_private_types_in_public_api
   void updateRenderObject(BuildContext context, _RenderSprite renderObject) {
-    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
     renderObject
-      ..imageProvider = SpriteData.image
-      ..source = data.resolve(size, pixelRatio)
-      ..sizeValue = size
+      ..data = data
       ..resolveImage(context);
   }
 }
 
 class _RenderSprite extends RenderBox {
   _RenderSprite({
-    required ImageProvider image,
-    required Rect source,
-    required double sizeValue,
-  })  : _source = source,
-        _imageProvider = image,
-        _sizeValue = sizeValue;
+    required ${sheet.options.dataClassName} data,
+  })  : _data = data;
 
-  ImageProvider _imageProvider;
-  Rect _source;
-  double _sizeValue;
+  ${sheet.options.dataClassName} _data;
 
-  set sizeValue(double value) {
-    if (_sizeValue == value) return;
-    _sizeValue = value;
-    markNeedsLayout();
-  }
-
-  set source(Rect value) {
-    if (_source == value) return;
-    _source = value;
-    markNeedsPaint();
-  }
-
-  set imageProvider(ImageProvider value) {
-    if (_imageProvider == value) return;
-    _imageProvider = value;
+  set data(${sheet.options.dataClassName} value) {
+    if (_data == value) return;
+    _data = value;
     markNeedsPaint();
   }
 
   ui.Image? _image;
   ImageStream? _imageStream;
   ImageStreamListener? _listener;
+  Rect _source = Rect.zero;
 
   void resolveImage(BuildContext context) {
-    final ImageStream newStream = _imageProvider.resolve(
-      createLocalImageConfiguration(context),
-    );
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final config = createLocalImageConfiguration(context);
+    final (source, provider) = _data.resolve(_sizeValue, pixelRatio);
+    _source = source;
+    final ImageStream newStream = provider.resolve(config);
 
     if (_imageStream?.key == newStream.key) return;
 
@@ -94,7 +73,7 @@ class _RenderSprite extends RenderBox {
 
   @override
   void performLayout() {
-    size = constraints.constrain(Size.square(_sizeValue));
+    size = constraints.biggest;
   }
 
   @override

@@ -9,3 +9,8 @@ dependencies:
   flutter:
     sdk: flutter
   vector_graphics: ^1.1.18
+
+flutter:
+  assets:
+    - assets/icon/
+    - assets/icon/vec/
