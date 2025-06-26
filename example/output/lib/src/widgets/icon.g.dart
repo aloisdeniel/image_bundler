@@ -26,14 +26,9 @@ abstract class Icons {
   ];
 }
 
+
 class Icon extends StatelessWidget {
-  const Icon({
-    super.key,
-    required this.data,
-    this.size,
-    this.color,
-    this.strategy = IconRenderingStrategy.auto,
-  });
+  const Icon({super.key, required this.data, this.size, this.color, this.strategy = IconRenderingStrategy.auto,});
 
   final double? size;
   final IconData data;
@@ -47,34 +42,33 @@ class Icon extends StatelessWidget {
       height: size,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (strategy == IconRenderingStrategy.vector ||
-              (strategy == IconRenderingStrategy.auto &&
-                  constraints.maxWidth > 48)) {
-            return VectorGraphic(
-              loader: AssetBytesLoader('assets/icon/vec/${data.name}'),
-              fit: BoxFit.contain,
-              alignment: Alignment.center,
-              colorFilter:
-                  (color != null
-                      ? ColorFilter.mode(color!, BlendMode.srcIn)
-                      : null),
-            );
-          }
-          Widget result = _Sprite(data: data);
-          if (color != null) {
-            result = ColorFiltered(
-              colorFilter: ColorFilter.mode(color!, BlendMode.srcIn),
-              child: result,
-            );
-          }
-          return result;
-        },
-      ),
+        if (strategy == IconRenderingStrategy.vector || (strategy == IconRenderingStrategy.auto && constraints.maxWidth > 48)) {
+          return VectorGraphic(
+            loader: AssetBytesLoader('assets/icon/vec/${data.name}'),
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+            colorFilter:
+                (color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null),
+          );
+        }
+        Widget result = _Sprite(data: data);
+        if (color != null) {
+          result = ColorFiltered(
+            colorFilter: ColorFilter.mode(color!, BlendMode.srcIn),
+            child: result,
+          );
+        }
+        return result;
+      }),
     );
   }
 }
 
-enum IconRenderingStrategy { auto, vector, raster }
+enum IconRenderingStrategy {
+  auto,
+  vector,
+  raster,
+}
 
 class IconData {
   const IconData(this.id, this.name);
@@ -83,7 +77,7 @@ class IconData {
   // This image is shared between all sprites.
   static ImageProvider image24 = const AssetImage('assets/icon/sheet_24.png');
   static ImageProvider image48 = const AssetImage('assets/icon/sheet_48.png');
-  (Rect, ImageProvider) resolve(double size, double pixelRatio) {
+  (Rect,ImageProvider) resolve(double size, double pixelRatio) {
     var index = id * 2;
     double resolvedSize = 48.0;
     var image = image48;
@@ -105,138 +99,33 @@ class IconData {
           _ => 90,
         };
     }
-    return (
-      Rect.fromLTWH(
-        _pos[index].toDouble(),
-        _pos[index + 1].toDouble(),
-        resolvedSize,
-        resolvedSize,
-      ),
-      image,
-    );
+    return (Rect.fromLTWH(
+      _pos[index].toDouble(),
+      _pos[index + 1].toDouble(),
+      resolvedSize,
+      resolvedSize,
+    ), image);
   }
-
   /// All positions are stored consecutively in a list.
   static const _pos = [
-    1,
-    1,
-    26,
-    1,
-    51,
-    1,
-    76,
-    1,
-    101,
-    1,
-    126,
-    1,
-    151,
-    1,
-    176,
-    1,
-    201,
-    1,
-    1,
-    1,
-    50,
-    1,
-    99,
-    1,
-    148,
-    1,
-    197,
-    1,
-    246,
-    1,
-    295,
-    1,
-    344,
-    1,
-    393,
-    1,
-    1,
-    1,
-    50,
-    1,
-    99,
-    1,
-    148,
-    1,
-    197,
-    1,
-    246,
-    1,
-    295,
-    1,
-    344,
-    1,
-    393,
-    1,
-    1,
-    1,
-    98,
-    1,
-    195,
-    1,
-    292,
-    1,
-    389,
-    1,
-    486,
-    1,
-    583,
-    1,
-    680,
-    1,
-    777,
-    1,
-    1,
-    1,
-    74,
-    1,
-    147,
-    1,
-    220,
-    1,
-    293,
-    1,
-    366,
-    1,
-    439,
-    1,
-    512,
-    1,
-    585,
-    1,
-    1,
-    1,
-    146,
-    1,
-    291,
-    1,
-    436,
-    1,
-    581,
-    1,
-    726,
-    1,
-    871,
-    1,
-    1016,
-    1,
-    1161,
-    1,
+    0, 0, 24, 0, 48, 0, 72, 0, 0, 24, 24, 24, 48, 24, 72, 25, 0, 48, 0, 0, 48, 0, 96, 0, 144, 0, 0, 48, 48, 48, 96, 48, 192, 0, 240, 0, 0, 0, 24, 0, 48, 0, 72, 0, 0, 24, 24, 24, 48, 24, 72, 25, 0, 48, 0, 0, 48, 0, 96, 0, 144, 0, 0, 48, 48, 48, 96, 48, 192, 0, 240, 0, 0, 0, 24, 0, 48, 0, 72, 0, 0, 24, 24, 24, 48, 24, 72, 25, 0, 48, 0, 0, 48, 0, 96, 0, 144, 0, 0, 48, 48, 48, 96, 48, 192, 0, 240, 0,
   ];
 }
 
+
 class _Sprite extends LeafRenderObjectWidget {
-  const _Sprite({super.key, required this.data});
+  const _Sprite({
+    super.key,
+    required this.data,
+  });
 
   final IconData data;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return _RenderSprite(data: data)..resolveImage(context);
+    return _RenderSprite(
+      data: data,
+    )..resolveImage(context);
   }
 
   @override
@@ -249,7 +138,9 @@ class _Sprite extends LeafRenderObjectWidget {
 }
 
 class _RenderSprite extends RenderBox {
-  _RenderSprite({required IconData data}) : _data = data;
+  _RenderSprite({
+    required IconData data,
+  })  : _data = data;
 
   IconData _data;
 
@@ -267,7 +158,7 @@ class _RenderSprite extends RenderBox {
   void resolveImage(BuildContext context) {
     final pixelRatio = MediaQuery.devicePixelRatioOf(context);
     final config = createLocalImageConfiguration(context);
-    final (source, provider) = _data.resolve(size.width, pixelRatio);
+    final (source, provider) = _data.resolve(_sizeValue, pixelRatio);
     _source = source;
     final ImageStream newStream = provider.resolve(config);
 
@@ -275,10 +166,8 @@ class _RenderSprite extends RenderBox {
 
     _imageStream?.removeListener(_listener!);
 
-    _listener = ImageStreamListener((
-      ImageInfo imageInfo,
-      bool synchronousCall,
-    ) {
+    _listener =
+        ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
       _image = imageInfo.image;
       markNeedsPaint();
     });
@@ -308,3 +197,4 @@ class _RenderSprite extends RenderBox {
     canvas.drawImageRect(_image!, _source, dst, Paint());
   }
 }
+

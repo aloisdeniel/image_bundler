@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'dart:convert';
-import 'dart:math' show max;
 
 import 'package:recase/recase.dart';
 import 'package:svg_bundler/src/dart/generator.dart';
 import 'package:svg_bundler/src/options.dart';
+import 'package:svg_bundler/src/pack/pack.dart';
 
 import 'geometry.dart';
 import 'package:path/path.dart';
@@ -54,10 +54,8 @@ class SvgBundler {
       >= 2.0 => 4096,
       _ => 2048,
     };
-    var offset = Offset(1, 1);
-    var sheetsize = Size.zero;
+    final packer = Pack(width: effectiveMaxWidth, height: effectiveMaxWidth);
     final sprites = <String, Sprite>{};
-    final size = spriteWidth * pixelRatio;
     for (var i = 0; i < files.length; i++) {
       final file = files[i];
       final name = ReCase(basenameWithoutExtension(file.path)).camelCase;
@@ -72,15 +70,11 @@ class SvgBundler {
         enableOverdrawOptimizer: false,
       );
 
-      final sizes = applyBoxFit(
-        BoxFit.contain,
-        Size(instructions.width, instructions.height),
-        Size(size.toDouble(), size.toDouble()),
+      final size = Size(
+        spriteWidth.toDouble(),
+        spriteWidth * (instructions.height / instructions.width),
       );
-      final destination = Alignment.center.inscribe(
-        sizes.destination,
-        offset & sizes.destination,
-      );
+      final destination = packer.add(size);
 
       sprites[name] = Sprite(
         name: name,
@@ -92,20 +86,6 @@ class SvgBundler {
           source: file,
         ),
         rect: destination,
-      );
-
-      // If last icon, we force line return
-      if (i == files.length - 1) {
-        offset += Offset(effectiveMaxWidth.toDouble(), 0);
-      } else {
-        offset += Offset(size + 1, 0);
-      }
-      if (offset.dx + size + 1 >= effectiveMaxWidth) {
-        offset = Offset(0, offset.dy + size + 1);
-      }
-      sheetsize = Size(
-        max(offset.dx + size + 1, sheetsize.width),
-        max(offset.dy + size + 1, sheetsize.height),
       );
     }
 
