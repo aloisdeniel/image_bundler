@@ -9,7 +9,11 @@ dependencies:
   flutter:
     sdk: flutter
   vector_graphics: ^1.1.18
-  sprite:
+  sprite_image: any
+
+dependency_overrides:
+  sprite_image:
+    path: ../../../sprite_image/
 
 flutter:
   assets:

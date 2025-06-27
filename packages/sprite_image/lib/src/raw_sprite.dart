@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:sprite/src/render_sprite.dart';
+import 'package:sprite_image/src/render_sprite.dart';
 
 /// A widget that displays a [dart:ui.Image] directly.
 ///

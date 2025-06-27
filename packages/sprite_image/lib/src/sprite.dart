@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
-import 'package:sprite/src/raw_sprite.dart';
+import 'package:sprite_image/src/raw_sprite.dart';
 
 /// A widget that displays an image.
 ///
