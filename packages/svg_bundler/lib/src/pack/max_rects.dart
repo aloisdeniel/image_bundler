@@ -10,11 +10,11 @@ class Rect {
 }
 
 enum FreeRectChoiceHeuristic {
-  BestShortSideFit, // BSSF: Positions the rectangle against the short side of a free rectangle into which it fits the best.
-  BestLongSideFit, // BLSF: Positions the rectangle against the long side of a free rectangle into which it fits the best.
-  BestAreaFit, // BAF: Positions the rectangle into the smallest free rect into which it fits.
-  BottomLeftRule, // BL: Does the Tetris placement.
-  ContactPointRule, // CP: Choosest the placement where the rectangle touches other rects as much as possible.
+  bestShortSideFit, // BSSF: Positions the rectangle against the short side of a free rectangle into which it fits the best.
+  bestLongSideFit, // BLSF: Positions the rectangle against the long side of a free rectangle into which it fits the best.
+  bestAreaFit, // BAF: Positions the rectangle into the smallest free rect into which it fits.
+  bottomLeftRule, // BL: Does the Tetris placement.
+  contactPointRule, // CP: Choosest the placement where the rectangle touches other rects as much as possible.
 }
 
 class MaxRectsBinPack {
@@ -34,7 +34,7 @@ class MaxRectsBinPack {
     int score1 = 0; // Unused in some methods.
     int score2 = 0;
     switch (method) {
-      case FreeRectChoiceHeuristic.BestShortSideFit:
+      case FreeRectChoiceHeuristic.bestShortSideFit:
         newNode = _findPositionForNewNodeBestShortSideFit(
           width,
           height,
@@ -42,7 +42,7 @@ class MaxRectsBinPack {
           score2,
         );
         break;
-      case FreeRectChoiceHeuristic.BestLongSideFit:
+      case FreeRectChoiceHeuristic.bestLongSideFit:
         newNode = _findPositionForNewNodeBestLongSideFit(
           width,
           height,
@@ -50,7 +50,7 @@ class MaxRectsBinPack {
           score2,
         );
         break;
-      case FreeRectChoiceHeuristic.BestAreaFit:
+      case FreeRectChoiceHeuristic.bestAreaFit:
         newNode = _findPositionForNewNodeBestAreaFit(
           width,
           height,
@@ -58,7 +58,7 @@ class MaxRectsBinPack {
           score2,
         );
         break;
-      case FreeRectChoiceHeuristic.BottomLeftRule:
+      case FreeRectChoiceHeuristic.bottomLeftRule:
         newNode = _findPositionForNewNodeBottomLeft(
           width,
           height,
@@ -66,7 +66,7 @@ class MaxRectsBinPack {
           score2,
         );
         break;
-      case FreeRectChoiceHeuristic.ContactPointRule:
+      case FreeRectChoiceHeuristic.contactPointRule:
         newNode = _findPositionForNewNodeContactPoint(width, height, score1);
         break;
     }

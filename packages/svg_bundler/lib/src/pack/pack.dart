@@ -21,7 +21,7 @@ class Pack {
     final result = _bin.insert(
       size.width.ceil() + margin * 2,
       size.height.ceil() + margin * 2,
-      FreeRectChoiceHeuristic.BestAreaFit,
+      FreeRectChoiceHeuristic.bestAreaFit,
     );
     return Rect.fromLTWH(
       result.x.toDouble() + margin,
