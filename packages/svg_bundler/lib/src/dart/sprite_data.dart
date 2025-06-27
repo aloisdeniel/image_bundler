@@ -25,9 +25,6 @@ String buildSpriteDataClass(CompiledSpritesheet spritesheet) {
     '  (Rect,ImageProvider) resolve(double size, double pixelRatio) {',
   );
   buffer.writeln('    var index = id * 4;');
-  buffer.writeln(
-    '    double resolvedSize = ${spritesheet.options.sizeVariants.last}.0;',
-  );
 
   // Size offset
   buffer.writeln(
@@ -37,7 +34,6 @@ String buildSpriteDataClass(CompiledSpritesheet spritesheet) {
   for (var size in spritesheet.options.sizeVariants) {
     buffer.writeln('      case <= $size:');
     buffer.writeln('        image = image$size;');
-    buffer.writeln('        resolvedSize = $size.0;');
     buffer.writeln('        index += switch (pixelRatio) {');
     for (var i = 0; i < spritesheet.pixelRatios.length; i++) {
       final pixelRatio = spritesheet.pixelRatios[i];

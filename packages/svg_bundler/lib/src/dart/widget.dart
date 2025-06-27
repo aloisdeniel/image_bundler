@@ -1,9 +1,54 @@
-import 'dart:async';
-import 'dart:collection';
+import 'dart:math';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/services.dart';
+import 'package:svg_bundler/src/dart/generator.dart';
+
+String buildWidgetClass(CompiledSpritesheet sheet) {
+  final maxSize = sheet.options.sizeVariants.fold(0, max);
+  final vecPath = sheet.options.assetVecRelativePath('\${data.name}');
+  final strategy = '${sheet.options.widgetClassName}RenderingStrategy';
+  return '''class ${sheet.options.widgetClassName} extends StatelessWidget {
+  const ${sheet.options.widgetClassName}({super.key, required this.data, this.size, this.color, this.strategy = $strategy.auto,});
+
+  final double? size;
+  final ${sheet.options.dataClassName} data;
+  final Color? color;
+  final $strategy strategy;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: size,
+      height: size,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+        if (strategy == $strategy.vector || (strategy == $strategy.auto && constraints.maxWidth > $maxSize)) {
+          return VectorGraphic(
+            loader: AssetBytesLoader('$vecPath'),
+            width: constraints.maxWidth,
+            fit: BoxFit.contain,
+            alignment: Alignment.center,
+            colorFilter:
+                (color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null),
+          );
+        }
+        final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+        final resolved = data.resolve(constraints.maxWidth, pixelRatio);
+        return Sprite(
+          image: resolved.\$2,
+          source: resolved.\$1,
+          color: color,
+        );
+      }),
+    );
+  }
+}
+
+enum $strategy {
+  auto,
+  vector,
+  raster,
+}
+
 
 /// Base on [AssetImage].
 class ResponsiveAssetImage extends AssetBundleImageProvider {
@@ -17,7 +62,7 @@ class ResponsiveAssetImage extends AssetBundleImageProvider {
 
   String keyName(int size) {
     final assetName = assetNameForSize[size]!;
-    return package == null ? assetName : 'packages/$package/$assetName';
+    return package == null ? assetName : 'packages/\$package/\$assetName';
   }
 
   int getVariantSize(double width) {
@@ -60,7 +105,6 @@ class ResponsiveAssetImage extends AssetBundleImageProvider {
             scale: chosenVariant.targetDevicePixelRatio ?? _naturalResolution,
           );
 
-          print('Key $key');
           if (completer != null) {
             completer.complete(key);
           } else {
@@ -148,5 +192,7 @@ class ResponsiveAssetImage extends AssetBundleImageProvider {
 
   @override
   String toString() =>
-      '${objectRuntimeType(this, '_ResponsiveImage')}(bundle: $bundle, name: "$keyName")';
+      '\${objectRuntimeType(this, '_ResponsiveImage')}(bundle: \$bundle, name: "\$keyName")';
+}
+''';
 }

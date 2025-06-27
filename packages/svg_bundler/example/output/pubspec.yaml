@@ -9,6 +9,7 @@ dependencies:
   flutter:
     sdk: flutter
   vector_graphics: ^1.1.18
+  sprite:
 
 flutter:
   assets:

@@ -1,0 +1,15 @@
+name: sprite_image
+description: A widget that renders a subpart of an image.
+version: 1.0.0
+repository: https://github.com/aloisdeniel/svg_bundler
+
+environment:
+  sdk: ^3.7.2
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  lints: ^5.0.0

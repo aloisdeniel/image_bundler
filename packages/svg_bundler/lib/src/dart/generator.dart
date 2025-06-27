@@ -13,6 +13,7 @@ class CompiledSpritesheet {
     required this.pixelRatios,
     required this.positions,
     required this.startOffset,
+    required this.spriteWidths,
   });
 
   factory CompiledSpritesheet.fromSpritesheets(
@@ -23,10 +24,12 @@ class CompiledSpritesheet {
 
     final names = sheets.first.sprites.map((x) => x.name).toList()..sort();
     final positions = <int>[];
+    final spriteWidths = <int>{};
     final startOffset = <(int size, double pixelRatio), int>{};
     for (var i = 0; i < sheets.length; i++) {
       final sheet = sheets[i];
       startOffset[(sheet.spriteWidth, sheet.pixelRatio)] = positions.length;
+      spriteWidths.add(sheet.spriteWidth);
       for (var name in names) {
         final sprite = sheet.sprites.firstWhere((x) => x.name == name);
         final pos = sprite.rect;
@@ -46,6 +49,7 @@ class CompiledSpritesheet {
             ..sort((a, b) => a.compareTo(b)),
       positions: positions,
       startOffset: startOffset,
+      spriteWidths: spriteWidths,
     );
   }
   final SvgBundlerOptions options;
@@ -53,6 +57,7 @@ class CompiledSpritesheet {
   final List<String> fileName;
   final List<String> fieldNames;
   final List<double> pixelRatios;
+  final Set<int> spriteWidths;
   final List<int> positions;
 }
 
@@ -60,10 +65,15 @@ class SpritesheetDartGenerator {
   String generate(List<Spritesheet> sheets, SvgBundlerOptions options) {
     final compiled = CompiledSpritesheet.fromSpritesheets(sheets, options);
     final result = StringBuffer();
+
+    result.writeln("import 'dart:async';");
+    result.writeln("import 'dart:collection';");
+    result.writeln();
+    result.writeln("import 'package:flutter/foundation.dart';");
+    result.writeln("import 'package:flutter/painting.dart';");
+    result.writeln("import 'package:flutter/services.dart';");
     result.writeln("import 'package:flutter/material.dart';");
     result.writeln("import 'package:vector_graphics/vector_graphics.dart';");
-    result.writeln();
-    result.writeln("import 'sprite.dart';");
     result.writeln();
     result.writeln(buildSpritesClass(compiled));
     result.writeln();

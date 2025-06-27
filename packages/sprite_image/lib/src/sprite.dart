@@ -2,21 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-/// @docImport 'package:flutter/material.dart';
-///
-/// @docImport 'app.dart';
-/// @docImport 'fade_in_image.dart';
-/// @docImport 'icon.dart';
-/// @docImport 'transitions.dart';
-
-import 'dart:async';
 import 'dart:io' show File;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/semantics.dart';
 import 'package:flutter/widgets.dart';
-import 'package:output/src/widgets/raw_sprite.dart';
+import 'package:sprite/src/raw_sprite.dart';
 
 /// A widget that displays an image.
 ///
