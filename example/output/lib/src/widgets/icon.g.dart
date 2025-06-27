@@ -1,7 +1,7 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
+
+import 'sprite.dart';
 
 abstract class Icons {
   static const cloudLightning = IconData(0, 'cloudLightning');
@@ -26,9 +26,14 @@ abstract class Icons {
   ];
 }
 
-
 class Icon extends StatelessWidget {
-  const Icon({super.key, required this.data, this.size, this.color, this.strategy = IconRenderingStrategy.auto,});
+  const Icon({
+    super.key,
+    required this.data,
+    this.size,
+    this.color,
+    this.strategy = IconRenderingStrategy.auto,
+  });
 
   final double? size;
   final IconData data;
@@ -42,33 +47,30 @@ class Icon extends StatelessWidget {
       height: size,
       child: LayoutBuilder(
         builder: (context, constraints) {
-        if (strategy == IconRenderingStrategy.vector || (strategy == IconRenderingStrategy.auto && constraints.maxWidth > 48)) {
-          return VectorGraphic(
-            loader: AssetBytesLoader('assets/icon/vec/${data.name}'),
-            fit: BoxFit.contain,
-            alignment: Alignment.center,
-            colorFilter:
-                (color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null),
-          );
-        }
-        Widget result = _Sprite(data: data);
-        if (color != null) {
-          result = ColorFiltered(
-            colorFilter: ColorFilter.mode(color!, BlendMode.srcIn),
-            child: result,
-          );
-        }
-        return result;
-      }),
+          if (strategy == IconRenderingStrategy.vector ||
+              (strategy == IconRenderingStrategy.auto &&
+                  constraints.maxWidth > 48)) {
+            return VectorGraphic(
+              loader: AssetBytesLoader('assets/icon/vec/${data.name}'),
+              width: constraints.maxWidth,
+              fit: BoxFit.contain,
+              alignment: Alignment.center,
+              colorFilter:
+                  (color != null
+                      ? ColorFilter.mode(color!, BlendMode.srcIn)
+                      : null),
+            );
+          }
+          final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+          final resolved = data.resolve(constraints.maxWidth, pixelRatio);
+          return Sprite(image: resolved.$2, source: resolved.$1, color: color);
+        },
+      ),
     );
   }
 }
 
-enum IconRenderingStrategy {
-  auto,
-  vector,
-  raster,
-}
+enum IconRenderingStrategy { auto, vector, raster }
 
 class IconData {
   const IconData(this.id, this.name);
@@ -77,8 +79,8 @@ class IconData {
   // This image is shared between all sprites.
   static ImageProvider image24 = const AssetImage('assets/icon/sheet_24.png');
   static ImageProvider image48 = const AssetImage('assets/icon/sheet_48.png');
-  (Rect,ImageProvider) resolve(double size, double pixelRatio) {
-    var index = id * 2;
+  (Rect, ImageProvider) resolve(double size, double pixelRatio) {
+    var index = id * 4;
     double resolvedSize = 48.0;
     var image = image48;
     switch (size) {
@@ -87,114 +89,246 @@ class IconData {
         resolvedSize = 24.0;
         index += switch (pixelRatio) {
           <= 1.0 => 0,
-          <= 2.0 => 36,
-          _ => 72,
+          <= 2.0 => 72,
+          _ => 144,
         };
       case <= 48:
         image = image48;
         resolvedSize = 48.0;
         index += switch (pixelRatio) {
-          <= 1.0 => 18,
-          <= 2.0 => 54,
-          _ => 90,
+          <= 1.0 => 36,
+          <= 2.0 => 108,
+          _ => 180,
         };
     }
-    return (Rect.fromLTWH(
-      _pos[index].toDouble(),
-      _pos[index + 1].toDouble(),
-      resolvedSize,
-      resolvedSize,
-    ), image);
+    return (
+      Rect.fromLTWH(
+        _pos[index].toDouble(),
+        _pos[index + 1].toDouble(),
+        _pos[index + 2].toDouble(),
+        _pos[index + 3].toDouble(),
+      ),
+      image,
+    );
   }
+
   /// All positions are stored consecutively in a list.
   static const _pos = [
-    0, 0, 24, 0, 48, 0, 72, 0, 0, 24, 24, 24, 48, 24, 72, 25, 0, 48, 0, 0, 48, 0, 96, 0, 144, 0, 0, 48, 48, 48, 96, 48, 192, 0, 240, 0, 0, 0, 24, 0, 48, 0, 72, 0, 0, 24, 24, 24, 48, 24, 72, 25, 0, 48, 0, 0, 48, 0, 96, 0, 144, 0, 0, 48, 48, 48, 96, 48, 192, 0, 240, 0, 0, 0, 24, 0, 48, 0, 72, 0, 0, 24, 24, 24, 48, 24, 72, 25, 0, 48, 0, 0, 48, 0, 96, 0, 144, 0, 0, 48, 48, 48, 96, 48, 192, 0, 240, 0,
+    105,
+    1,
+    24,
+    24,
+    27,
+    27,
+    24,
+    24,
+    79,
+    1,
+    24,
+    25,
+    27,
+    1,
+    24,
+    24,
+    1,
+    27,
+    24,
+    24,
+    53,
+    1,
+    24,
+    24,
+    53,
+    27,
+    24,
+    24,
+    1,
+    1,
+    24,
+    24,
+    131,
+    1,
+    24,
+    24,
+    201,
+    1,
+    48,
+    48,
+    51,
+    51,
+    48,
+    48,
+    151,
+    1,
+    48,
+    49,
+    51,
+    1,
+    48,
+    48,
+    1,
+    51,
+    48,
+    48,
+    101,
+    1,
+    48,
+    48,
+    101,
+    51,
+    48,
+    48,
+    1,
+    1,
+    48,
+    48,
+    251,
+    1,
+    48,
+    48,
+    201,
+    1,
+    48,
+    48,
+    51,
+    51,
+    48,
+    48,
+    151,
+    1,
+    48,
+    49,
+    51,
+    1,
+    48,
+    48,
+    1,
+    51,
+    48,
+    48,
+    101,
+    1,
+    48,
+    48,
+    101,
+    51,
+    48,
+    48,
+    1,
+    1,
+    48,
+    48,
+    251,
+    1,
+    48,
+    48,
+    393,
+    1,
+    96,
+    96,
+    99,
+    99,
+    96,
+    96,
+    295,
+    1,
+    96,
+    97,
+    99,
+    1,
+    96,
+    96,
+    1,
+    99,
+    96,
+    96,
+    197,
+    1,
+    96,
+    96,
+    197,
+    99,
+    96,
+    96,
+    1,
+    1,
+    96,
+    96,
+    491,
+    1,
+    96,
+    96,
+    297,
+    1,
+    72,
+    72,
+    75,
+    75,
+    72,
+    72,
+    223,
+    1,
+    72,
+    73,
+    75,
+    1,
+    72,
+    72,
+    1,
+    75,
+    72,
+    72,
+    149,
+    1,
+    72,
+    72,
+    149,
+    75,
+    72,
+    72,
+    1,
+    1,
+    72,
+    72,
+    371,
+    1,
+    72,
+    72,
+    585,
+    1,
+    144,
+    144,
+    147,
+    147,
+    144,
+    144,
+    439,
+    1,
+    144,
+    145,
+    147,
+    1,
+    144,
+    144,
+    1,
+    147,
+    144,
+    144,
+    293,
+    1,
+    144,
+    144,
+    293,
+    147,
+    144,
+    144,
+    1,
+    1,
+    144,
+    144,
+    731,
+    1,
+    144,
+    144,
   ];
 }
-
-
-class _Sprite extends LeafRenderObjectWidget {
-  const _Sprite({
-    super.key,
-    required this.data,
-  });
-
-  final IconData data;
-
-  @override
-  RenderObject createRenderObject(BuildContext context) {
-    return _RenderSprite(
-      data: data,
-    )..resolveImage(context);
-  }
-
-  @override
-  // ignore: library_private_types_in_public_api
-  void updateRenderObject(BuildContext context, _RenderSprite renderObject) {
-    renderObject
-      ..data = data
-      ..resolveImage(context);
-  }
-}
-
-class _RenderSprite extends RenderBox {
-  _RenderSprite({
-    required IconData data,
-  })  : _data = data;
-
-  IconData _data;
-
-  set data(IconData value) {
-    if (_data == value) return;
-    _data = value;
-    markNeedsPaint();
-  }
-
-  ui.Image? _image;
-  ImageStream? _imageStream;
-  ImageStreamListener? _listener;
-  Rect _source = Rect.zero;
-
-  void resolveImage(BuildContext context) {
-    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
-    final config = createLocalImageConfiguration(context);
-    final (source, provider) = _data.resolve(_sizeValue, pixelRatio);
-    _source = source;
-    final ImageStream newStream = provider.resolve(config);
-
-    if (_imageStream?.key == newStream.key) return;
-
-    _imageStream?.removeListener(_listener!);
-
-    _listener =
-        ImageStreamListener((ImageInfo imageInfo, bool synchronousCall) {
-      _image = imageInfo.image;
-      markNeedsPaint();
-    });
-
-    _imageStream = newStream;
-    _imageStream!.addListener(_listener!);
-  }
-
-  @override
-  void detach() {
-    _imageStream?.removeListener(_listener!);
-    super.detach();
-  }
-
-  @override
-  void performLayout() {
-    size = constraints.biggest;
-  }
-
-  @override
-  void paint(PaintingContext context, Offset offset) {
-    if (_image == null) return;
-
-    final canvas = context.canvas;
-
-    final dst = offset & size;
-    canvas.drawImageRect(_image!, _source, dst, Paint());
-  }
-}
-

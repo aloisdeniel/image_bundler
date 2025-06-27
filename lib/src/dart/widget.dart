@@ -24,20 +24,20 @@ String buildWidgetClass(CompiledSpritesheet sheet) {
         if (strategy == $strategy.vector || (strategy == $strategy.auto && constraints.maxWidth > $maxSize)) {
           return VectorGraphic(
             loader: AssetBytesLoader('$vecPath'),
+            width: constraints.maxWidth,
             fit: BoxFit.contain,
             alignment: Alignment.center,
             colorFilter:
                 (color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null),
           );
         }
-        Widget result = _Sprite(data: data);
-        if (color != null) {
-          result = ColorFiltered(
-            colorFilter: ColorFilter.mode(color!, BlendMode.srcIn),
-            child: result,
-          );
-        }
-        return result;
+        final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+        final resolved = data.resolve(constraints.maxWidth, pixelRatio);
+        return Sprite(
+          image: resolved.\$2,
+          source: resolved.\$1,
+          color: color,
+        );
       }),
     );
   }

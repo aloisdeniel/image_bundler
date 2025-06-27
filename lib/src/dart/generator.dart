@@ -1,5 +1,4 @@
 import 'package:svg_bundler/src/dart/sprite_data.dart';
-import 'package:svg_bundler/src/dart/sprite_widget.dart';
 import 'package:svg_bundler/src/dart/sprites.dart';
 import 'package:svg_bundler/src/dart/widget.dart';
 import 'package:svg_bundler/src/options.dart';
@@ -28,10 +27,13 @@ class CompiledSpritesheet {
     for (var i = 0; i < sheets.length; i++) {
       final sheet = sheets[i];
       startOffset[(sheet.spriteWidth, sheet.pixelRatio)] = positions.length;
-      for (var sprite in sheet.sprites) {
+      for (var name in names) {
+        final sprite = sheet.sprites.firstWhere((x) => x.name == name);
         final pos = sprite.rect;
         positions.add(pos.left.toInt());
         positions.add(pos.top.toInt());
+        positions.add(pos.width.toInt());
+        positions.add(pos.height.toInt());
       }
     }
 
@@ -58,18 +60,16 @@ class SpritesheetDartGenerator {
   String generate(List<Spritesheet> sheets, SvgBundlerOptions options) {
     final compiled = CompiledSpritesheet.fromSpritesheets(sheets, options);
     final result = StringBuffer();
-    result.writeln("import 'dart:ui' as ui;");
-    result.writeln();
     result.writeln("import 'package:flutter/material.dart';");
     result.writeln("import 'package:vector_graphics/vector_graphics.dart';");
+    result.writeln();
+    result.writeln("import 'sprite.dart';");
     result.writeln();
     result.writeln(buildSpritesClass(compiled));
     result.writeln();
     result.writeln(buildWidgetClass(compiled));
     result.writeln();
     result.writeln(buildSpriteDataClass(compiled));
-    result.writeln();
-    result.writeln(buildSpriteWidgetClass(compiled));
     return result.toString();
   }
 }

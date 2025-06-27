@@ -24,7 +24,7 @@ String buildSpriteDataClass(CompiledSpritesheet spritesheet) {
   buffer.writeln(
     '  (Rect,ImageProvider) resolve(double size, double pixelRatio) {',
   );
-  buffer.writeln('    var index = id * 2;');
+  buffer.writeln('    var index = id * 4;');
   buffer.writeln(
     '    double resolvedSize = ${spritesheet.options.sizeVariants.last}.0;',
   );
@@ -55,8 +55,8 @@ String buildSpriteDataClass(CompiledSpritesheet spritesheet) {
   buffer.writeln('    return (Rect.fromLTWH(');
   buffer.writeln('      _pos[index].toDouble(),');
   buffer.writeln('      _pos[index + 1].toDouble(),');
-  buffer.writeln('      resolvedSize,');
-  buffer.writeln('      resolvedSize,');
+  buffer.writeln('      _pos[index + 2].toDouble(),');
+  buffer.writeln('      _pos[index + 3].toDouble(),');
   buffer.writeln('    ), image);');
   buffer.writeln('  }');
 

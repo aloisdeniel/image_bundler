@@ -71,8 +71,8 @@ class SvgBundler {
       );
 
       final size = Size(
-        spriteWidth.toDouble(),
-        spriteWidth * (instructions.height / instructions.width),
+        pixelRatio * spriteWidth.toDouble(),
+        pixelRatio * spriteWidth * (instructions.height.toDouble() / instructions.width),
       );
       final destination = packer.add(size);
 
