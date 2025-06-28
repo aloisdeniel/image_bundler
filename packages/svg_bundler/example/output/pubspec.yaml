@@ -17,5 +17,5 @@ dependency_overrides:
 
 flutter:
   assets:
-    - assets/icon/
-    - assets/icon/vec/
+    - assets/sprite/
+    - assets/sprite/vec/

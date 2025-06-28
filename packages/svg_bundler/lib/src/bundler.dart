@@ -28,15 +28,14 @@ class SvgBundler {
   Future<SvgBundle> bundle(SvgBundlerOptions options) async {
     final spritesheets = <Spritesheet>[];
 
-    for (var sizeVariant in options.sizeVariants) {
-      for (var pixelRatio in options.pixelRatios) {
-        final spritesheet = await createSpritesheet(
-          files: options.inputSvgs,
-          spriteWidth: sizeVariant,
-          pixelRatio: pixelRatio,
-        );
-        spritesheets.add(spritesheet);
-      }
+    for (var sizeVariant in options.variants) {
+      final spritesheet = await createSpritesheet(
+        files: options.inputSvgs,
+        spriteWidth: sizeVariant.spriteWidth,
+        pixelRatio: sizeVariant.pixelRatio,
+        sheetSize: sizeVariant.sheetSize,
+      );
+      spritesheets.add(spritesheet);
     }
 
     final dartGenerator = SpritesheetDartGenerator();
@@ -48,13 +47,13 @@ class SvgBundler {
     required List<File> files,
     required int spriteWidth,
     required double pixelRatio,
+    required Size sheetSize,
     int? maxWidth,
   }) async {
-    final effectiveMaxWidth = switch (pixelRatio) {
-      >= 2.0 => 4096,
-      _ => 2048,
-    };
-    final packer = Pack(width: effectiveMaxWidth, height: effectiveMaxWidth);
+    final packer = Pack(
+      width: sheetSize.width.toInt(),
+      height: sheetSize.height.toInt(),
+    );
     final sprites = <String, Sprite>{};
     for (var i = 0; i < files.length; i++) {
       final file = files[i];
@@ -72,7 +71,9 @@ class SvgBundler {
 
       final size = Size(
         pixelRatio * spriteWidth.toDouble(),
-        pixelRatio * spriteWidth * (instructions.height.toDouble() / instructions.width),
+        pixelRatio *
+            spriteWidth *
+            (instructions.height.toDouble() / instructions.width),
       );
       final destination = packer.add(size);
 
@@ -92,8 +93,8 @@ class SvgBundler {
     return Spritesheet(
       sprites: sprites.values.toList(),
       spriteWidth: spriteWidth,
-      width: effectiveMaxWidth,
-      height: effectiveMaxWidth,
+      width: sheetSize.width.toInt(),
+      height: sheetSize.height.toInt(),
       pixelRatio: pixelRatio,
     );
   }

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:svg_bundler/src/dart/generator.dart';
 
 String buildWidgetClass(CompiledSpritesheet sheet) {
-  final maxSize = sheet.options.sizeVariants.fold(0, max);
+  final maxSize = sheet.options.variants.map((x) => x.spriteWidth).fold(0, max);
   final vecPath = sheet.options.assetVecRelativePath('\${data.name}');
   final strategy = '${sheet.options.widgetClassName}RenderingStrategy';
   return '''class ${sheet.options.widgetClassName} extends StatelessWidget {
@@ -33,7 +33,7 @@ String buildWidgetClass(CompiledSpritesheet sheet) {
         }
         final pixelRatio = MediaQuery.devicePixelRatioOf(context);
         final resolved = data.resolve(constraints.maxWidth, pixelRatio);
-        return Sprite(
+        return si.Sprite(
           image: resolved.\$2,
           source: resolved.\$1,
           color: color,

@@ -2,19 +2,31 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:recase/recase.dart';
+import 'package:svg_bundler/src/geometry.dart';
+
+class SheetVariantOptions {
+  const SheetVariantOptions({
+    required this.pixelRatio,
+    required this.spriteWidth,
+    required this.sheetSize,
+    required this.name,
+  });
+  final double pixelRatio;
+  final int spriteWidth;
+  final Size sheetSize;
+  final String name;
+}
 
 class SvgBundlerOptions {
   SvgBundlerOptions({
     required this.name,
     required this.inputSvgs,
     required this.output,
-    this.pixelRatios = const [1.0, 2.0, 3.0],
-    this.sizeVariants = const [24, 48],
+    required this.variants,
     this.assetRelativePath = 'assets/',
     this.codeRelativePath = 'lib/src/widgets/',
   });
-  final List<double> pixelRatios;
-  final List<int> sizeVariants;
+  final List<SheetVariantOptions> variants;
   final List<File> inputSvgs;
   final String name;
 

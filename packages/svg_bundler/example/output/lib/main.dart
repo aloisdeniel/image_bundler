@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide Icon, Icons;
-import 'package:output/src/widgets/icon.g.dart';
+import 'package:output/src/widgets/sprite.g.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Future<void> init = Icons.precache(context);
+  late Future<void> init = Sprites.precache(context);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -69,10 +69,10 @@ class _HomeState extends State<Home> {
             child: SingleChildScrollView(
               child: Wrap(
                 children: [
-                  for (var icon in Icons.values)
+                  for (var icon in Sprites.values)
                     SizedBox(
                       width: width,
-                      child: Icon(data: icon, color: color),
+                      child: Sprite(data: icon, color: color),
                     ),
                 ],
               ),

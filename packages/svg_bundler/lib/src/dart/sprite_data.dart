@@ -13,7 +13,10 @@ String buildSpriteDataClass(CompiledSpritesheet spritesheet) {
 
   // Shared image
   buffer.writeln('  // This image is shared between all sprites.');
-  for (var size in spritesheet.options.sizeVariants) {
+  final sizeVariants =
+      spritesheet.options.variants.map((x) => x.spriteWidth).toSet().toList()
+        ..sort();
+  for (var size in sizeVariants) {
     final sheetPath = spritesheet.options.assetSheetRelativePath(1, size);
     buffer.writeln(
       '  static ImageProvider image$size = const AssetImage(\'$sheetPath\');',
@@ -27,11 +30,9 @@ String buildSpriteDataClass(CompiledSpritesheet spritesheet) {
   buffer.writeln('    var index = id * 4;');
 
   // Size offset
-  buffer.writeln(
-    '    var image = image${spritesheet.options.sizeVariants.last};',
-  );
+  buffer.writeln('    var image = image${sizeVariants.last};');
   buffer.writeln('    switch (size) {');
-  for (var size in spritesheet.options.sizeVariants) {
+  for (var size in sizeVariants) {
     buffer.writeln('      case <= $size:');
     buffer.writeln('        image = image$size;');
     buffer.writeln('        index += switch (pixelRatio) {');

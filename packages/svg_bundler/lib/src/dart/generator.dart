@@ -69,7 +69,7 @@ class SpritesheetDartGenerator {
     result.writeln("import 'package:flutter/material.dart';");
     result.writeln("import 'package:vector_graphics/vector_graphics.dart';");
     result.writeln();
-    result.writeln("import 'package:sprite_image/sprite_image.dart';");
+    result.writeln("import 'package:sprite_image/sprite_image.dart' as si;");
     result.writeln();
     result.writeln(buildSpritesClass(compiled));
     result.writeln();

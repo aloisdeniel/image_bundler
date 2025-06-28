@@ -6,31 +6,13 @@ import 'package:svg_bundler/src/options.dart';
 import 'package:svg_bundler/src/png/renderer.dart';
 import 'package:vector_graphics_compiler/vector_graphics_compiler.dart';
 
-Stream<List<File>> bundleSvgs({
-  required List<double> pixelRatios,
-  required Directory input,
-  required String name,
-  required Directory output,
-  String assetRelativePath = 'assets/',
-  String codeRelativePath = 'lib/src/widgets/',
-}) async* {
+export 'package:svg_bundler/src/geometry.dart' show Size;
+
+Stream<List<File>> bundleSvgs(SvgBundlerOptions options) async* {
   initializePathOpsFromFlutterCache();
 
   final pngRenderer = SpritesheetPngRenderer();
   final bundler = SvgBundler();
-  final options = SvgBundlerOptions(
-    name: name,
-    output: output,
-    assetRelativePath: assetRelativePath,
-    codeRelativePath: codeRelativePath,
-    pixelRatios: pixelRatios,
-    inputSvgs:
-        input
-            .listSync()
-            .whereType<File>()
-            .where((f) => extension(f.path) == '.svg')
-            .toList(),
-  );
   print('Starting processing spritesheets...');
   final result = await bundler.bundle(options);
   print('All spritesheets processed.');

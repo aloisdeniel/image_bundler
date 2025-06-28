@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import 'package:sprite_image/sprite_image.dart';
+import 'package:sprite_image/sprite_image.dart' as si;
 
-abstract class Icons {
-  static const cloudLightning = IconData(0, 'cloudLightning');
-  static const confetti = IconData(1, 'confetti');
-  static const dominos = IconData(2, 'dominos');
-  static const flowChart = IconData(3, 'flowChart');
-  static const flutter = IconData(4, 'flutter');
-  static const homeHeartFill = IconData(5, 'homeHeartFill');
-  static const magicFill = IconData(6, 'magicFill');
-  static const mailVolumeFill = IconData(7, 'mailVolumeFill');
-  static const rocket = IconData(8, 'rocket');
+abstract class Sprites {
+  static const cloudLightning = SpriteData(0, 'cloudLightning');
+  static const confetti = SpriteData(1, 'confetti');
+  static const dominos = SpriteData(2, 'dominos');
+  static const flowChart = SpriteData(3, 'flowChart');
+  static const flutter = SpriteData(4, 'flutter');
+  static const homeHeartFill = SpriteData(5, 'homeHeartFill');
+  static const magicFill = SpriteData(6, 'magicFill');
+  static const mailVolumeFill = SpriteData(7, 'mailVolumeFill');
+  static const rocket = SpriteData(8, 'rocket');
   static const values = [
     cloudLightning,
     confetti,
@@ -27,25 +27,25 @@ abstract class Icons {
 
   static Future<void> precache(BuildContext context) {
     return Future.wait([
-      precacheImage(IconData.image24, context),
-      precacheImage(IconData.image48, context),
+      precacheImage(SpriteData.image24, context),
+      precacheImage(SpriteData.image48, context),
     ]);
   }
 }
 
-class Icon extends StatelessWidget {
-  const Icon({
+class Sprite extends StatelessWidget {
+  const Sprite({
     super.key,
     required this.data,
     this.size,
     this.color,
-    this.strategy = IconRenderingStrategy.auto,
+    this.strategy = SpriteRenderingStrategy.auto,
   });
 
   final double? size;
-  final IconData data;
+  final SpriteData data;
   final Color? color;
-  final IconRenderingStrategy strategy;
+  final SpriteRenderingStrategy strategy;
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +54,11 @@ class Icon extends StatelessWidget {
       height: size,
       child: LayoutBuilder(
         builder: (context, constraints) {
-          if (strategy == IconRenderingStrategy.vector ||
-              (strategy == IconRenderingStrategy.auto &&
+          if (strategy == SpriteRenderingStrategy.vector ||
+              (strategy == SpriteRenderingStrategy.auto &&
                   constraints.maxWidth > 48)) {
             return VectorGraphic(
-              loader: AssetBytesLoader('assets/icon/vec/${data.name}'),
+              loader: AssetBytesLoader('assets/sprite/vec/${data.name}'),
               width: constraints.maxWidth,
               fit: BoxFit.contain,
               alignment: Alignment.center,
@@ -70,22 +70,26 @@ class Icon extends StatelessWidget {
           }
           final pixelRatio = MediaQuery.devicePixelRatioOf(context);
           final resolved = data.resolve(constraints.maxWidth, pixelRatio);
-          return Sprite(image: resolved.$2, source: resolved.$1, color: color);
+          return si.Sprite(
+            image: resolved.$2,
+            source: resolved.$1,
+            color: color,
+          );
         },
       ),
     );
   }
 }
 
-enum IconRenderingStrategy { auto, vector, raster }
+enum SpriteRenderingStrategy { auto, vector, raster }
 
-class IconData {
-  const IconData(this.id, this.name);
+class SpriteData {
+  const SpriteData(this.id, this.name);
   final int id;
   final String name;
   // This image is shared between all sprites.
-  static ImageProvider image24 = const AssetImage('assets/icon/sheet_24.png');
-  static ImageProvider image48 = const AssetImage('assets/icon/sheet_48.png');
+  static ImageProvider image24 = const AssetImage('assets/sprite/sheet_24.png');
+  static ImageProvider image48 = const AssetImage('assets/sprite/sheet_48.png');
   (Rect, ImageProvider) resolve(double size, double pixelRatio) {
     var index = id * 4;
     var image = image48;

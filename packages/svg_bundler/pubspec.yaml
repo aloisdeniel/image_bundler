@@ -7,6 +7,7 @@ environment:
   sdk: ^3.7.2
 
 dependencies:
+  args: ^2.7.0
   image: ^4.5.4
   path: ^1.9.1
   recase: ^4.1.0
