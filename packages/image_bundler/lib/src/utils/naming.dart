@@ -26,9 +26,9 @@ abstract class Naming {
     final start = '0'.codeUnitAt(0);
     final end = '9'.codeUnitAt(0);
     if (firstChar >= start && firstChar <= end) {
-      return 'n$firstChar';
+      return 'n$firstChar${name.substring(1)}';
     }
-    return '';
+    return name;
   }
 
   static String _keyword(String name) {

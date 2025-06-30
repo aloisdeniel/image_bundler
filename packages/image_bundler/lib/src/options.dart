@@ -25,11 +25,12 @@ class SvgBundlerOptions {
     required this.variants,
     this.assetRelativePath = 'assets/',
     this.codeRelativePath = 'lib/src/widgets/',
+    this.package,
   });
   final List<SheetVariantOptions> variants;
   final List<File> inputSvgs;
   final String name;
-
+  final String? package;
   final Directory output;
   final String assetRelativePath;
   final String codeRelativePath;

@@ -22,8 +22,12 @@ String buildSpriteDataClass(CompiledSpritesheet spritesheet) {
         ..sort();
   for (var size in sizeVariants) {
     final sheetPath = spritesheet.options.assetSheetRelativePath(1, size);
+    final package =
+        spritesheet.options.package != null
+            ? ', package: \'${spritesheet.options.package}\''
+            : '';
     buffer.writeln(
-      '  static ImageProvider image$size = const AssetImage(\'$sheetPath\');',
+      '  static ImageProvider image$size = const AssetImage(\'$sheetPath\'$package);',
     );
   }
 

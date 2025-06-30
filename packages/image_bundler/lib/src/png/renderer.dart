@@ -6,10 +6,14 @@ import 'package:image_bundler/src/spritesheet.dart';
 
 class SpritesheetPngRenderer {
   const SpritesheetPngRenderer();
-  Future<Uint8List> render(Spritesheet s) async {
+  Future<Uint8List> render(
+    Spritesheet s, {
+    void Function(Sprite sprite)? onStartSprite,
+  }) async {
     final renderer = Canvas.create(s.width, s.height);
     for (var sprite in s.sprites) {
       final destination = sprite.rect;
+      onStartSprite?.call(sprite);
       switch (sprite) {
         case VectorSprite():
           await renderer.paintSvg(

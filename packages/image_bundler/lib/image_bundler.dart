@@ -26,7 +26,12 @@ Stream<List<File>> bundleImages(SvgBundlerOptions options) async* {
     );
     final outputFile = File(path);
     await outputFile.create(recursive: true);
-    final bytes = await pngRenderer.render(sheet);
+    final bytes = await pngRenderer.render(
+      sheet,
+      onStartSprite: (s) {
+        print(' Sprite > ${s.name}');
+      },
+    );
     await outputFile.writeAsBytes(bytes);
     print('Saved spritesheet to $path.');
   }

@@ -20,6 +20,12 @@ void main(List<String> arguments) async {
     help: 'Name of the spritesheet and generated classes.',
   );
   parser.addOption(
+    'package',
+    abbr: 'p',
+    mandatory: false,
+    help: 'Name of the package to add it to generated image providers.',
+  );
+  parser.addOption(
     'pixelRatios',
     abbr: 'r',
     defaultsTo: '1.0,2.0,3.0',
@@ -70,6 +76,7 @@ void main(List<String> arguments) async {
   final name = args['name'] ?? 'sprite';
   final options = SvgBundlerOptions(
     name: name,
+    package: args['package'],
     output: Directory(args['output'] ?? '.'),
     assetRelativePath: args['assetRelativePath'] ?? 'assets/',
     codeRelativePath: args['codeRelativePath'] ?? 'lib/src/widgets',
