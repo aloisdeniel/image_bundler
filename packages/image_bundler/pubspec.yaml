@@ -1,6 +1,6 @@
 name: image_bundler
 description: A Flutter tool that bundles a collection of input images as responsive images.
-version: 1.1.2
+version: 1.1.3
 repository: https://github.com/aloisdeniel/image_bundler/packages/image_bundler
 
 environment:

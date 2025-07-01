@@ -1,3 +1,7 @@
+## 1.1.3
+
+- Removed LayoutBuilder when size is precised.
+
 ## 1.1.2
 
 - Fixed package argument.

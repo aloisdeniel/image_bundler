@@ -14,31 +14,39 @@ String buildWidgetClass(CompiledSpritesheet sheet) {
   final Color? color;
   final $strategy strategy;
 
+
+  Widget _build(BuildContext context, double maxWidth) {
+    if (strategy == $strategy.vector || (strategy == $strategy.auto && maxWidth > $maxSize)) {
+      return VectorGraphic(
+        loader: AssetBytesLoader('$vecPath'),
+        width: maxWidth,
+        fit: BoxFit.contain,
+        alignment: Alignment.center,
+        colorFilter:
+            (color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null),
+      );
+    }
+    final pixelRatio = MediaQuery.devicePixelRatioOf(context);
+    final resolved = data.resolve(maxWidth, pixelRatio);
+    return si.Sprite(
+      image: resolved.\$2,
+      source: resolved.\$1,
+      color: color,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-        if (strategy == $strategy.vector || (strategy == $strategy.auto && constraints.maxWidth > $maxSize)) {
-          return VectorGraphic(
-            loader: AssetBytesLoader('$vecPath'),
-            width: constraints.maxWidth,
-            fit: BoxFit.contain,
-            alignment: Alignment.center,
-            colorFilter:
-                (color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null),
-          );
-        }
-        final pixelRatio = MediaQuery.devicePixelRatioOf(context);
-        final resolved = data.resolve(constraints.maxWidth, pixelRatio);
-        return si.Sprite(
-          image: resolved.\$2,
-          source: resolved.\$1,
-          color: color,
-        );
-      }),
+    if (size case final size?) {
+      return SizedBox(
+        width: size,
+        child: _build(context, size!),
+      );
+    }
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return _build(context, constraints.maxWidth);
+      },
     );
   }
 }
