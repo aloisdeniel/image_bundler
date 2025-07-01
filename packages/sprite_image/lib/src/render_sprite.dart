@@ -361,11 +361,16 @@ class RenderSprite extends RenderBox {
       return constraints.smallest;
     }
 
+    if (_source == null) {
+      return constraints.constrainSizeAndAttemptToPreserveAspectRatio(
+        Size(
+          _image!.width.toDouble() / _scale,
+          _image!.height.toDouble() / _scale,
+        ),
+      );
+    }
     return constraints.constrainSizeAndAttemptToPreserveAspectRatio(
-      Size(
-        _image!.width.toDouble() / _scale,
-        _image!.height.toDouble() / _scale,
-      ),
+      Size(_source!.width / _scale, _source!.height / _scale),
     );
   }
 

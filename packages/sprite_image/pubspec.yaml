@@ -1,6 +1,6 @@
 name: sprite_image
 description: A widget that renders a subpart of an image.
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/aloisdeniel/svg_bundler
 
 environment:
