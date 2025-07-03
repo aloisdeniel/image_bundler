@@ -43,9 +43,9 @@ Once generated, you can simply use the resulting widget with its associated data
 
 <table>
   <tr>
-    <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/cloud-lightning.svg" width="64"></td>
-    <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/confetti.svg" width="64"></td>
-    <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/dominos.svg" width="64"></td>
+    <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/cloud-lightning.svg?raw=true" width="64"></td>
+    <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/confetti.svg?raw=true" width="64"></td>
+    <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/dominos.svg?raw=true" width="64"></td>
   </tr>
 </table>
 
