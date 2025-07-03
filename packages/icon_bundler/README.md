@@ -47,12 +47,12 @@ Once generated, you can simply use the resulting widget with its associated data
     <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/confetti.svg?raw=true" width="64"></td>
     <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/dominos.svg?raw=true" width="64"></td>
     <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/flow-chart.svg?raw=true" width="64"></td>
-    <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/flutter.svg?raw=true" width="64"></td>
+    <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/flutter.png?raw=true" width="64"></td>
   </tr>
   <tr>
     <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/home-heart-fill.svg?raw=true" width="64"></td>
     <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/magic-fill.svg?raw=true" width="64"></td>
-    <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/mail-volume.svg?raw=true" width="64"></td>
+    <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/mail-volume-fill.svg?raw=true" width="64"></td>
     <td><img src="https://github.com/aloisdeniel/image_bundler/blob/main/packages/icon_bundler/example/input/rocket.svg?raw=true" width="64"></td>
   </tr>
 </table>
@@ -68,8 +68,9 @@ Once generated, you can simply use the resulting widget with its associated data
 @override
 Widget build(BuildContext context) {
   return AppIcon(
+    AppIcons.magicFill, // Use the generated data
+    color: Colors.blue, // Optional color to apply to the icon
     size: 64,
-    color: Colors.blue,
   );
 }
 ```
