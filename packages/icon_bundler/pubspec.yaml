@@ -1,18 +1,16 @@
 name: icon_bundler
-description: A sample command-line application.
+description: Bundle a collection of svg, png, jpg files as a single image containing all the icons.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/aloisdeniel/image_bundler/packages/icon_bundler
 
 environment:
   sdk: ^3.8.1
 
-# Add regular dependencies here.
 dependencies:
   recase: ^4.1.0
   path: ^1.9.1
   image: ^4.5.4
   args: ^2.7.0
-  # path: ^1.8.0
 
 dev_dependencies:
   lints: ^5.0.0
