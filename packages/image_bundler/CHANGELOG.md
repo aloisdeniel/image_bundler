@@ -1,3 +1,9 @@
+## 1.2.0
+
+- Fixed color transparency.
+- Added includeOriginal argument.
+- Added custom image provider to avoid sheet duplication because of pixel ratios.
+
 ## 1.1.3
 
 - Removed LayoutBuilder when size is precised.

@@ -22,18 +22,6 @@ String buildSpritesClass(CompiledSpritesheet spritesheet) {
   buffer.writeln();
   buffer.writeln();
 
-  buffer.writeln('  static Future<void> precache(BuildContext context) {');
-  buffer.writeln('    return Future.wait([');
-
-  for (var size in spritesheet.spriteWidths) {
-    buffer.writeln(
-      '      precacheImage(${spritesheet.options.dataClassName}.image$size, context),',
-    );
-  }
-
-  buffer.writeln('    ]);');
-  buffer.writeln('  }');
-
   buffer.writeln('}');
   return buffer.toString();
 }

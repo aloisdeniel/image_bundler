@@ -26,7 +26,7 @@ void main(List<String> arguments) async {
     help: 'Name of the package to add it to generated image providers.',
   );
   parser.addOption(
-    'pixelRatios',
+    'pixel-ratios',
     abbr: 'r',
     defaultsTo: '1.0,2.0,3.0',
     help: 'Comma-separated list of pixel ratios to generate spritesheets for.',
@@ -46,54 +46,64 @@ void main(List<String> arguments) async {
   );
 
   parser.addOption(
-    'assetRelativePath',
+    'asset-relative-path',
     abbr: 'a',
     defaultsTo: 'assets/',
     help: 'Relative path for assets in the output directory.',
   );
 
   parser.addOption(
-    'codeRelativePath',
+    'code-relative-path',
     abbr: 'c',
     defaultsTo: 'lib/src/widgets/',
     help: 'Relative path for generated code in the output directory.',
   );
+  parser.addFlag(
+    'include-original',
+    abbr: 'g',
+    defaultsTo: true,
+    help:
+        'Whether to include the original vector graphics or raster image files in the output.',
+  );
 
   var args = parser.parse(arguments);
 
+  final baseSizes =
+      (args['sizes']! as String).split(',').map((x) {
+          final parts = x.split(':');
+          return MapEntry(int.parse(parts[0]), int.parse(parts[1]));
+        }).toList()
+        ..sort((x, y) => x.key.compareTo(y.key));
   final pixelRatios =
-      args['pixelRatios']
-          ?.split(',')
-          .map((x) => double.tryParse(x.trim()) ?? 1.0)
-          .toList() ??
-      [1.0, 2.0, 3.0];
-  final sizes =
-      args['sizes']!.split(',').map((x) {
-        final parts = x.split(':');
-        return (int.parse(parts[0]), int.parse(parts[1]));
-      }).toList();
-
+      (args['pixel-ratios']! as String)
+          .split(',')
+          .map((x) => double.parse(x))
+          .toList()
+        ..sort((x, y) => x.compareTo(y));
   final name = args['name'] ?? 'sprite';
+  final sizes = <int, int>{};
+  for (var baseSize in baseSizes) {
+    for (var pixelRatio in pixelRatios) {
+      sizes[(baseSize.key * pixelRatio).toInt()] =
+          (baseSize.value * pixelRatio).toInt();
+    }
+  }
+
   final options = SvgBundlerOptions(
     name: name,
     package: args['package'],
     output: Directory(args['output'] ?? '.'),
-    assetRelativePath: args['assetRelativePath'] ?? 'assets/',
-    codeRelativePath: args['codeRelativePath'] ?? 'lib/src/widgets',
+    assetRelativePath: args['asset-relative-path'] ?? 'assets/',
+    codeRelativePath: args['code-relative-path'] ?? 'lib/src/widgets',
+    includeOriginal: args['include-original'] ?? true,
     variants: [
-      for (final pixelRatio in pixelRatios)
-        for (final size in sizes)
-          SheetVariantOptions(
-            pixelRatio: pixelRatio,
-            spriteWidth: size.$1,
-            sheetSize: Size(
-              size.$2.toDouble() * pixelRatio,
-              size.$2.toDouble() * pixelRatio,
-            ),
-            name: name,
-          ),
-    ],
-    inputSvgs:
+      for (final size in sizes.entries)
+        SheetVariantOptions(
+          spriteWidth: size.key,
+          sheetSize: Size(size.value.toDouble(), size.value.toDouble()),
+        ),
+    ]..sort((x, y) => x.spriteWidth.compareTo(y.spriteWidth)),
+    inputImages:
         Directory(args['input'] ?? '.')
             .listSync()
             .whereType<File>()

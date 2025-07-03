@@ -31,9 +31,8 @@ class ImageBundler {
 
     for (var sizeVariant in options.variants) {
       final spritesheet = await createSpritesheet(
-        files: options.inputSvgs,
+        files: options.inputImages,
         spriteWidth: sizeVariant.spriteWidth,
-        pixelRatio: sizeVariant.pixelRatio,
         sheetSize: sizeVariant.sheetSize,
       );
       spritesheets.add(spritesheet);
@@ -51,7 +50,6 @@ class ImageBundler {
   Future<Spritesheet> createSpritesheet({
     required List<File> files,
     required int spriteWidth,
-    required double pixelRatio,
     required Size sheetSize,
     int? maxWidth,
   }) async {
@@ -77,10 +75,9 @@ class ImageBundler {
         );
 
         final size = Size(
-          pixelRatio * spriteWidth.toDouble(),
-          pixelRatio *
-              spriteWidth *
-              (instructions.height.toDouble() / instructions.width),
+          spriteWidth.toDouble(),
+
+          spriteWidth * (instructions.height.toDouble() / instructions.width),
         );
         final destination = packer.add(size);
 
@@ -99,10 +96,8 @@ class ImageBundler {
           throw FormatException('Failed to decode PNG: ${file.path}');
         }
         final size = Size(
-          pixelRatio * spriteWidth.toDouble(),
-          pixelRatio *
-              spriteWidth *
-              (decoded.height.toDouble() / decoded.width),
+          spriteWidth.toDouble(),
+          spriteWidth * (decoded.height.toDouble() / decoded.width),
         );
         final destination = packer.add(size);
         sprites[name] = RasterizedSprite(
@@ -123,7 +118,6 @@ class ImageBundler {
       spriteWidth: spriteWidth,
       width: sheetSize.width.toInt(),
       height: sheetSize.height.toInt(),
-      pixelRatio: pixelRatio,
     );
   }
 }

@@ -13,7 +13,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Future<void> init = Sprites.precache(context);
+  late Future<void> init = SpriteImage.precache(context);
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(

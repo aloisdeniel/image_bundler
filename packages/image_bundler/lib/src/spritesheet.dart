@@ -56,11 +56,9 @@ class Spritesheet {
     required this.spriteWidth,
     required this.width,
     required this.height,
-    required this.pixelRatio,
   });
   final List<Sprite> sprites;
   final int spriteWidth;
-  final double pixelRatio;
   final int width;
   final int height;
 }

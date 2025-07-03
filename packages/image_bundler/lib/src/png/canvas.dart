@@ -6,7 +6,7 @@ import 'dart:typed_data';
 import 'package:image/image.dart';
 import 'package:path/path.dart';
 import 'package:vector_graphics_compiler/vector_graphics_compiler.dart'
-    hide Color;
+    hide Color, BlendMode;
 
 abstract class Canvas {
   factory Canvas.create(int width, int height) {
@@ -16,13 +16,7 @@ abstract class Canvas {
   Canvas({required this.width, required this.height});
   final int width;
   final int height;
-  late var image = Image(
-    width: width,
-    height: height,
-    format: Format.int8,
-    numChannels: 4,
-    backgroundColor: ColorRgba8(0, 0, 0, 0),
-  );
+  Image? image;
 
   /// Paints the given SVG image at the given coordinates.
   Future<void> paintSvg(
@@ -32,8 +26,6 @@ abstract class Canvas {
     double y,
     double width,
     double height,
-    double scaleX,
-    double scaleY,
   );
 
   /// Paints the given Png image at the given coordinates.
@@ -43,21 +35,29 @@ abstract class Canvas {
     double y,
     double width,
     double height,
-    double scaleX,
-    double scaleY,
   ) async {
+    if (this.image == null) {
+      this.image = Image(
+        width: this.width,
+        height: this.height,
+        format: image.format,
+        numChannels: image.numChannels,
+      );
+    }
     this.image = compositeImage(
-      this.image,
+      this.image!,
       image,
       dstX: x.toInt(),
       dstY: y.toInt(),
       dstW: width.toInt(),
       dstH: height.toInt(),
+      blend: BlendMode.direct,
+      linearBlend: true,
     );
   }
 
   Future<Uint8List> toImage() async {
-    return encodePng(image);
+    return encodePng(image!);
   }
 }
 
@@ -73,8 +73,6 @@ class _ResvgCanvas extends Canvas {
     double y,
     double width,
     double height,
-    double scaleX,
-    double scaleY,
   ) async {
     final process = await Process.start('resvg', [
       '-',
@@ -110,11 +108,6 @@ class _ResvgCanvas extends Canvas {
     // Adding to sheet
     final result = await completer.future;
     final decoded = decodePng(Uint8List.fromList(result));
-    paintImage(decoded!, x, y, width, height, scaleX, scaleY);
-  }
-
-  @override
-  Future<Uint8List> toImage() async {
-    return encodePng(image);
+    paintImage(decoded!, x, y, width, height);
   }
 }

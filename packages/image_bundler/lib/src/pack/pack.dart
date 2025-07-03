@@ -14,14 +14,14 @@ class Pack {
 
   /// Margin around each rectangle.
   final int margin;
-  late final _bin = MaxRectsBinPack(width, height, allowRotations: false);
+  late final _bin = MaxRectsBinPack(width, height);
 
   /// Adds a rectangle of the given size to the pack.
   Rect add(Size size) {
     final result = _bin.insert(
       size.width.ceil() + margin * 2,
       size.height.ceil() + margin * 2,
-      FreeRectChoiceHeuristic.bestAreaFit,
+      FreeRectChoiceHeuristic.bestShortSideFit,
     );
     return Rect.fromLTWH(
       result.x.toDouble() + margin,

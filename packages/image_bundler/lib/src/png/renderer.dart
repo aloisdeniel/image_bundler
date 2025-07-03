@@ -23,8 +23,6 @@ class SpritesheetPngRenderer {
             destination.top,
             destination.width,
             destination.height,
-            sprite.instructions.width / destination.width,
-            sprite.instructions.height / destination.height,
           );
 
           break;
@@ -42,8 +40,6 @@ class SpritesheetPngRenderer {
             destination.top,
             destination.width,
             destination.height,
-            1,
-            1,
           );
           break;
       }

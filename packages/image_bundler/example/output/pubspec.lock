@@ -89,7 +89,7 @@ packages:
       path: "../../../sprite_image"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   string_scanner:
     dependency: transitive
     description:

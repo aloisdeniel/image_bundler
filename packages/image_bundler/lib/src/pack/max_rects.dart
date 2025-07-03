@@ -25,7 +25,11 @@ class MaxRectsBinPack {
   List<Rect> usedRectangles = [];
   List<Rect> freeRectangles = [];
 
-  MaxRectsBinPack(this.binWidth, this.binHeight, {this.allowRotations = true}) {
+  MaxRectsBinPack(
+    this.binWidth,
+    this.binHeight, {
+    this.allowRotations = false,
+  }) {
     freeRectangles.add(Rect(x: 0, y: 0, width: binWidth, height: binHeight));
   }
 

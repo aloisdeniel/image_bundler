@@ -1,3 +1,4 @@
+import 'package:image_bundler/src/dart/image.dart';
 import 'package:image_bundler/src/dart/sprite_data.dart';
 import 'package:image_bundler/src/dart/sprites.dart';
 import 'package:image_bundler/src/dart/widget.dart';
@@ -10,7 +11,6 @@ class CompiledSpritesheet {
     required this.options,
     required this.fileName,
     required this.fieldNames,
-    required this.pixelRatios,
     required this.positions,
     required this.startOffset,
     required this.spriteWidths,
@@ -20,45 +20,43 @@ class CompiledSpritesheet {
     List<Spritesheet> sheets,
     SvgBundlerOptions options,
   ) {
-    sheets.sort((x, y) => x.pixelRatio.compareTo(y.pixelRatio));
-
     final names = sheets.first.sprites.map((x) => x.name).toList()..sort();
-    final positions = <int>[];
+    final positions = <List<int>>[];
     final spriteWidths = <int>{};
-    final startOffset = <(int size, double pixelRatio), int>{};
+    final startOffset = <int, int>{};
+    var offset = 0;
     for (var i = 0; i < sheets.length; i++) {
+      final sizePositions = <int>[];
       final sheet = sheets[i];
-      startOffset[(sheet.spriteWidth, sheet.pixelRatio)] = positions.length;
+      startOffset[sheet.spriteWidth] = offset;
       spriteWidths.add(sheet.spriteWidth);
       for (var name in names) {
         final sprite = sheet.sprites.firstWhere((x) => x.name == name);
         final pos = sprite.rect;
-        positions.add(pos.left.toInt());
-        positions.add(pos.top.toInt());
-        positions.add(pos.width.toInt());
-        positions.add(pos.height.toInt());
+        sizePositions.add(pos.left.toInt());
+        sizePositions.add(pos.top.toInt());
+        sizePositions.add(pos.width.toInt());
+        sizePositions.add(pos.height.toInt());
       }
+      positions.add(sizePositions);
+      offset += sizePositions.length;
     }
 
     return CompiledSpritesheet(
       options: options,
       fileName: names,
       fieldNames: names,
-      pixelRatios:
-          sheets.map((e) => e.pixelRatio).toSet().toList()
-            ..sort((a, b) => a.compareTo(b)),
       positions: positions,
       startOffset: startOffset,
-      spriteWidths: spriteWidths,
+      spriteWidths: spriteWidths.toList()..sort((x, y) => x.compareTo(y)),
     );
   }
   final SvgBundlerOptions options;
-  final Map<(int size, double pixelRatio), int> startOffset;
+  final Map<int, int> startOffset;
   final List<String> fileName;
   final List<String> fieldNames;
-  final List<double> pixelRatios;
-  final Set<int> spriteWidths;
-  final List<int> positions;
+  final List<int> spriteWidths;
+  final List<List<int>> positions;
 }
 
 class SpritesheetDartGenerator {
@@ -66,8 +64,14 @@ class SpritesheetDartGenerator {
     final compiled = CompiledSpritesheet.fromSpritesheets(sheets, options);
     final result = StringBuffer();
 
+    result.writeln("import 'dart:ui' as ui;");
+    result.writeln();
+    result.writeln("import 'package:flutter/foundation.dart';");
     result.writeln("import 'package:flutter/material.dart';");
-    result.writeln("import 'package:vector_graphics/vector_graphics.dart';");
+    result.writeln("import 'package:flutter/services.dart';");
+    if (options.includeOriginal) {
+      result.writeln("import 'package:vector_graphics/vector_graphics.dart';");
+    }
     result.writeln();
     result.writeln("import 'package:sprite_image/sprite_image.dart' as si;");
     result.writeln();
@@ -76,6 +80,8 @@ class SpritesheetDartGenerator {
     result.writeln(buildWidgetClass(compiled));
     result.writeln();
     result.writeln(buildSpriteDataClass(compiled));
+    result.writeln();
+    result.writeln(buildImageClass(compiled));
     return result.toString();
   }
 }
