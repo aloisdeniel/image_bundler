@@ -37,8 +37,8 @@ class SpritesheetRenderer {
           break;
         case RasterizedSprite(image: final Image image):
           final size = fitSize(
-            image.width,
-            image.height,
+            image.width.toDouble(),
+            image.height.toDouble(),
             sprite.width,
             sprite.height,
           );

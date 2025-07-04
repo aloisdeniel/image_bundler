@@ -159,6 +159,9 @@ void main(List<String> arguments) async {
   print(' ░');
   print(' ░ Don\'t forget to update your pubspec.yaml file:');
   print(' ░');
+  print(' ░ dependencies:');
+  print(' ░   sprite_image: any');
+  print(' ░');
   print(' ░ flutter:');
   print(' ░   assets:');
   print(' ░     - ${options.assetRelativePath}${options.fileName}/');
