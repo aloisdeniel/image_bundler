@@ -1,3 +1,7 @@
+## 1.1.2
+
+- Improved CLI style.
+
 ## 1.1.1
 
 - Fixed svg size parsing.
