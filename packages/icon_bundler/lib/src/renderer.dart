@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:icon_bundler/src/spritesheet.dart';
+import 'package:icon_bundler/src/utils.dart';
 import 'package:image/image.dart';
 import 'package:path/path.dart';
 
@@ -18,29 +19,42 @@ class SpritesheetRenderer {
       onStartSprite?.call(sprite);
       switch (sprite.sprite) {
         case VectorSprite(svg: final String svg):
-          await renderer.paintSvg(
-            svg,
-            sprite.left,
-            sprite.top,
+          final svgSize = parseSvgSize(svg);
+          final size = fitSize(
+            svgSize.width,
+            svgSize.height,
             sprite.width,
             sprite.height,
+          );
+          await renderer.paintSvg(
+            svg,
+            sprite.left + ((sprite.width / 2) - (size.width / 2)).toInt(),
+            sprite.top + ((sprite.height / 2) - (size.height / 2)).toInt(),
+            size.width,
+            size.height,
           );
 
           break;
         case RasterizedSprite(image: final Image image):
+          final size = fitSize(
+            image.width,
+            image.height,
+            sprite.width,
+            sprite.height,
+          );
           // We control downsampling algorithm here
           final resized = copyResize(
             image,
             interpolation: Interpolation.cubic,
-            width: sprite.width,
-            height: sprite.height,
+            width: size.width,
+            height: size.height,
           );
           await renderer.paintImage(
             resized,
-            sprite.left,
-            sprite.top,
-            sprite.width,
-            sprite.height,
+            sprite.left + ((sprite.width / 2) - (size.width / 2)).toInt(),
+            sprite.top + ((sprite.height / 2) - (size.height / 2)).toInt(),
+            size.width,
+            size.height,
           );
           break;
       }

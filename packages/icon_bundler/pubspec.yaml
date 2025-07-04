@@ -1,6 +1,6 @@
 name: icon_bundler
 description: Bundle a collection of svg, png, jpg files as a single image containing all the icons.
-version: 1.0.0
+version: 1.1.0
 repository: https://github.com/aloisdeniel/image_bundler/packages/icon_bundler
 
 environment:

@@ -134,7 +134,7 @@ void main(List<String> arguments) async {
         const loaderSymbols = ['▖', '▗', '▝', '▘'];
         final symbol = loaderSymbols[progress.index % loaderSymbols.length];
         stdout.writeln(
-          '$symbol ${(progress.progress * 100).toStringAsFixed(1)}% ${progress.nextSprite.name}',
+          ' $symbol ${(progress.progress * 100).toStringAsFixed(1)}% ${progress.nextSprite.name}',
         );
       case SpritesheetRenderedEvent rendered:
         stdout.write('\x1B[1A'); // Move cursor up

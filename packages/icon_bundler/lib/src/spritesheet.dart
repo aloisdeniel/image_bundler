@@ -113,6 +113,7 @@ class Spritesheet {
         if (decoded == null) {
           throw FormatException('Failed to decode PNG: ${file.path}');
         }
+
         sprites[name] = RasterizedSprite(
           name: name,
           image: decoded,
