@@ -103,30 +103,29 @@ void main(List<String> arguments) async {
         .toList(),
   );
 
-  print(r'''
- ░   _____                    ___                 _ _           
- ▒   \_   \___ ___  _ __     / __\_   _ _ __   __| | | ___ _ __ 
- ▓    / /\/ __/ _ \| '_ \   /__\// | | | '_ \ / _` | |/ _ \ '__|
- ▓ /\/ /_| (_| (_) | | | | / \/  \ |_| | | | | (_| | |  __/ |   
- ▒ \____/ \___\___/|_| |_| \_____/\__,_|_| |_|\__,_|_|\___|_|   
- ░                                                              ''');
+  const String logo =
+      // ignore: prefer_adjacent_string_concatenation
+      ' ░░▀█▀░█▀▀░█▀█░█▀█░░░█▀▄░█░█░█▀█░█▀▄░█░░░█▀▀░█▀▄\n' +
+      ' ░░░█░░█░░░█░█░█░█░░░█▀▄░█░█░█░█░█░█░█░░░█▀▀░█▀▄\n' +
+      ' ░░▀▀▀░▀▀▀░▀▀▀░▀░▀░░░▀▀░░▀▀▀░▀░▀░▀▀░░▀▀▀░▀▀▀░▀░▀';
+
+  print('');
+  print(logo);
 
   await for (var event in bundleIcons(options)) {
     switch (event) {
       case SpritesheetConfigurationCompletedEvent spritesheetConfig:
-        print(' ▒');
-        print(' ▓ ');
-        print(' █ Ready');
+        print(' ░');
+        print(' \x1B[1;34m█ Ready\x1B[0m');
         print(
-          ' ░ ✓ Size variants: ${spritesheetConfig.spritesheets.map((x) => x.spriteSize).join(',')}',
+          ' ░ \x1B[1;34m✓\x1B[0m Size variants: ${spritesheetConfig.spritesheets.map((x) => x.spriteSize).join(',')}',
         );
         print(
-          ' ░ ✓ Sprite count: ${spritesheetConfig.spritesheets.first.sprites.length}',
+          ' ░ \x1B[1;34m✓\x1B[0m Sprite count: ${spritesheetConfig.spritesheets.first.sprites.length}',
         );
       case SpritesheetRenderingStarted():
-        print(' ▒');
-        print(' ▓ ');
-        print(' █ Rendering');
+        print(' ░');
+        print(' \x1B[1;36m█ Rendering\x1B[0m');
         stdout.writeln();
       case SpritesheetRenderingProgressEvent progress:
         stdout.write('\x1B[1A'); // Move cursor up
@@ -140,22 +139,20 @@ void main(List<String> arguments) async {
         stdout.write('\x1B[1A'); // Move cursor up
         stdout.write('\x1B[2K'); // Clear entire line
         stdout.writeln(
-          ' ░ ✓ ${rendered.file.path} (${(rendered.sizeInBytes / 1024).toStringAsFixed(1)}kB)',
+          ' ░ \x1B[1;36m✓\x1B[0m ${rendered.file.path} (${(rendered.sizeInBytes / 1024).toStringAsFixed(1)}kB)',
         );
         if (!event.isLast) stdout.writeln();
       case SpritesheetRenderingCompleted():
-        print(' ░ ✓ Rendering completed ');
+        print(' ░ \x1B[1;36m✓\x1B[0m Rendering completed ');
       case SpritesheetCodeGenerationStarted():
-        print(' ▒');
-        print(' ▓ ');
-        print(' █ Code generation');
+        print(' ░');
+        print(' \x1B[1;35m█ Code generation\x1B[0m');
       case SpritesheetCodeGenerationCompleted():
-        print(' ░ ✓ ${event.file.path} ');
+        print(' ░ \x1B[1;35m✓\x1B[0m ${event.file.path} ');
     }
   }
-  print(' ▒');
-  print(' ▓ ');
-  print(' █ Completed');
+  print(' ░');
+  print(' \x1B[1;32m█ Completed\x1B[0m');
   print(' ░');
   print(' ░ Don\'t forget to update your pubspec.yaml file:');
   print(' ░');
