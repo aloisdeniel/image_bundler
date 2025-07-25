@@ -1,3 +1,7 @@
+## 1.1.3
+
+- Downgraded minimum dart SDK version.
+
 ## 1.1.2
 
 - Improved CLI style.
